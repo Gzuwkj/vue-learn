@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Vue.js 实例学习</title>
+</head>
+<script src="../js/vue/vue.js"></script>
+<style>
+    html,body {
+        height: 100%;
+    }
+    body {
+        background: #0f3854;
+        background: radial-gradient(ellipse at center,  #0a2e38  0%, #000000 70%);
+        background-size: 100%;
+    }
+    p {
+        margin: 0;
+        padding: 0;
+    }
+    #clock {
+        font-family: 'Share Tech Mono', monospace;
+        color: #ffffff;
+        text-align: center;
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        color: #daf6ff;
+        text-shadow: 0 0 20px rgba(10, 175, 230, 1),  0 0 20px rgba(10, 175, 230, 0);
+    }
+    .time {
+        letter-spacing: 0.05em;
+        font-size: 80px;
+        padding: 5px 0;
+    }
+    .date {
+        letter-spacing: 0.1em;
+        font-size: 24px;
+    }
+    .text {
+        letter-spacing: 0.1em;
+        font-size: 12px;
+        padding: 20px 0 0;
+    }
+</style>
+<body>
+
+<div id="clock">
+    <p class="date">{{ date }}</p>
+    <p class="time">{{ time }}</p>
+    <p class="text">DIGITAL CLOCK with Vue.js</p>
+</div>
+<script>
+    (new Vue({
+        el: '#clock',
+        data: {
+            time: '',
+            date: ''
+        },
+        created: function (){
+            this.startClock() // 在创建时 启动时钟
+        },
+        methods: {
+            startClock: function(){
+                let timer = null;
+                var that = this;
+                function parseZero(target, length) {
+                    return target.toString().length >= length ? target.toString() : (function () {
+                        let j = length - target.toString().length;
+                        for(var i = 0;i < j;i++){target = '0' + target;}
+                        return target;
+                    })();// 这里写的花里胡哨的 /xk 我以为不会通过的，不过js又一次刷新我的三观， 在三元表达式中也能嵌套进立即执行函数
+                    /*
+                    * 不过内容过于繁琐，不推荐这样写
+                    * */
+                }
+                function undateTime (){  // 此处产生一个闭包 包含timer that undateTime
+                    timer = timer || setInterval(undateTime, 1000);
+                    var date = new Date();
+                    //因为除了第一次调用外，后面的调用都是 通过setInterval 调用的， 所以后面的this 都是指向 window的
+                    // 故 采用将外部this用that 保存后传入setInterval 中 , 事实证明， 闭包真香
+                    that.time = parseZero(date.getHours(), 2) + ':' + parseZero(date.getMinutes(), 2) + ':' + parseZero(date.getSeconds(), 2);
+                    that.date = parseZero(date.getFullYear(), 4) + '-' + parseZero(date.getMonth() + 1, 2) + '-' + parseZero(date.getDate(), 2);
+                }
+                undateTime();
+            }
+        }
+    }))
+</script>
+
+</body>
+</html>
