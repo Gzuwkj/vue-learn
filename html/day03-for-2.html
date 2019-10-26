@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>组件</title>
+    <script src="../js/vue/vue.js"></script>
+</head>
+<body>
+<div id="body">
+    <form action="" style="padding: .5rem; background: antiquewhite;" @submit.prevent>
+        <label for="Blog-title" >博客标题</label><br>
+        <input type="text" id="Blog-title" v-model="Blog_title"><br>
+        <label for="Blog-title">博客内容</label><br>
+        <textarea id="Blog-content" v-model="Blog_content"></textarea><br>
+        <button type="submit" @click="createBlog()">提交</button>
+    </form>
+    <div>
+        <Blog v-for="blog in blogs" :blog="blog" :bg-color="Blog_bgColor" :font-size="Blog_fontSize"></Blog>
+    </div>
+</div>
+
+<script>
+    Date.prototype.Format = function(fmt)
+    {
+        var o = {
+            "M+" : this.getMonth()+1,                 //月份
+            "d+" : this.getDate(),                    //日
+            "h+" : this.getHours(),                   //小时
+            "m+" : this.getMinutes(),                 //分
+            "s+" : this.getSeconds(),                 //秒
+            "q+" : Math.floor((this.getMonth()+3)/3), //季度
+            "S"  : this.getMilliseconds()             //毫秒
+        };
+        if(/(y+)/.test(fmt))
+            fmt=fmt.replace(RegExp.$1, (this.getFullYear()+"").substr(4 - RegExp.$1.length));
+        for(var k in o)
+            if(new RegExp("("+ k +")").test(fmt))
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length==1) ? (o[k]) : (("00"+ o[k]).substr((""+ o[k]).length)));
+        return fmt;
+    }
+    var vm = new Vue({
+        el: '#body',
+        data: {
+            Blog_title: '',
+            Blog_content: '',
+            Blog_bgColor: '#bdc3c7',
+            Blog_fontSize: '1rem',
+            blogs: [],
+        },
+        components: {
+            'Blog': {
+                data: function(){
+                    return {}
+                },
+                props: ['blog', 'bgColor', 'fontSize'],
+                methods: {
+                    dzFunc: function (obj, flag, target) {
+                        obj[flag] = obj[flag] ? false  : true;
+                        obj[target] += obj[flag] ? 1 : -1;
+                    }
+                },
+                template: `
+                    <div style='padding: .5rem;margin: .2rem;' :style="{ background: bgColor, fontSize: fontSize}">
+                        <h2>标题: {{ blog.Blog_title }}</h2>
+                        <small>时间: {{ blog.Submit_time.Format('yyyy-MM-dd hh:mm:ss') }}</small>
+                        <p>内容：<br>{{ blog.Blog_content }}</p>
+                        <svg t="1572084539941" class="icon" viewBox="0 0 1026 1024"
+                            version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2081"
+                            :width="fontSize" :height="fontSize" style="margin: 0 .3rem;cursor: pointer;"
+                            @click="dzFunc(blog, 'dzl', 'dzNum')">
+                            <path d="M797.952 1002.112H109.312A109.44 109.44 0 0 1 0 892.8V502.208c0-62.208
+                             51.2-116.8 109.312-116.8h109.888c138.816 0 243.456-106.496 243.456-247.744v-28.8C462.656
+                             50.88 515.2 0 575.104 0h2.944c45.952 0 88.256 30.464 102.848 74.048l7.168 20.288a356.928
+                             356.928 0 0 1 8.384 200.64l-3.84 15.872c-1.28 10.56-6.336 29.952-15.424 48.832h241.728c33.856
+                             0 65.28 15.936 86.08 43.584 21.12 28.032 28.096 64.576 18.56 97.92l-120.256 419.264a109.696
+                             109.696 0 0 1-105.344 81.664zM109.312 436.8c-30.208 0-57.984 31.104-57.984 65.408v390.592c0
+                             31.936 26.048 57.984 57.984 57.984h688.64a59.136 59.136 0 0 0 56.128-44.096l120.128-419.776a59.072
+                             59.072 0 0 0-10.176-52.736 56.064 56.064 0 0 0-44.992-23.04H616.704V359.68c7.296-4.096 23.744-40.704
+                             24.832-53.504l0.704-5.312 4.288-18.048a306.88 306.88 0 0 0-6.72-171.648l-7.424-20.288a59.008
+                             59.008 0 0 0-54.336-39.552h-2.944c-31.488 0-61.12 28.032-61.12 57.536v28.8c0 170.56-126.784
+                             299.136-294.784 299.136H109.312z" :fill="blog.dzl ? 'yellow' : 'black'" p-id="2082"></path>
+                             <path d="M231.232 976.448a25.6 25.6 0 0 1-25.664-25.6V436.8a25.6 25.6 0 1 1 51.328 0v513.984a25.6
+                              25.6 0 0 1-25.664 25.664z" p-id="2083"
+                              :fill="blog.dzl ? 'yellow' : 'black'" ></path>
+                        </svg><b>{{ blog.dzNum }}</b>
+                        <svg t="1572085162596" class="icon" viewBox="0 0 1024 1024" version="1.1"
+                            xmlns="http://www.w3.org/2000/svg" p-id="2876"
+                            width="1.2rem" height="1rem" style="cursor: pointer; margin: 0 .2rem"
+                            @click="dzFunc(blog, 'view', 'viewNum')">
+                            <path d="M509.618 415.795c-42.695 0-77.253 38.372-77.253 85.738 0 47.352
+                            34.558 86.22 77.253 86.22 42.667 0 76.716-38.867 76.716-86.22
+                            0-47.352-34.049-85.738-76.716-85.738z m1.9-177.9c-211.548 0-383.265 159.859-383.265 274.587
+                            0 114.727 171.717 273.624 383.266 273.624 212.484 0 384.227-162.522 384.227-273.624
+                            0-111.088-171.743-274.587-384.227-274.587z m-1.446 452.006c-89.7 0-162.134-81.71-162.134-181.903
+                            0-101.157 72.435-182.397 162.134-182.397 90.183 0 163.1 81.241 163.1 182.397 0
+                            100.206-72.917 181.903-163.1 181.903z" p-id="2877" :fill="blog.view ? 'yellow' : 'black'"></path>
+                        </svg><b>{{ blog.viewNum }}</b>
+                    </div>
+                    `
+            }
+        },
+        methods: {
+            createBlog: function(){
+                this.blogs.push({
+                    'Blog_title': this.Blog_title,
+                    'Blog_content': this.Blog_content,
+                    'Submit_time': new Date(),
+                    'dzNum': 0,
+                    'viewNum': 0,
+                });
+                this.Blog_title = '', this.Blog_content = '';
+            }
+        },
+    });
+
+</script>
+
+</body>
+</html>
