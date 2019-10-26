@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>条件渲染</title>
+    <script src="../js/vue/vue.js"></script>
+</head>
+<body>
+<div id="body" >
+    <input type="checkbox" id="jack" value="Jack1" v-model="checkedNames">
+    <label for="jack">Jack</label>
+    <input type="checkbox" id="john" value="John" v-model="checkedNames">
+    <label for="john">John</label>
+    <input type="checkbox" id="mike" value="Mike" v-model="checkedNames">
+    <label for="mike">Mike</label>
+    <br>
+    <span>Checked names: {{ checkedNames }}</span>
+    <template v-if="show">
+        <ul>
+            <li>555</li>
+            <li>444</li>
+            <li>333</li>
+        </ul>
+    </template>
+    <template v-if="login_type">
+        <label for="">用户名登陆</label>
+        <input type="text" placeholder="输入你的用户名">
+    </template>
+    <template v-else>
+        <label for="">邮箱登陆</label>
+        <input type="text" placeholder="输入你的邮箱">
+    </template>
+    <button @click="login_type = !login_type">交换</button>
+</div>
+<script>
+    var vm = new Vue({
+        el: '#body',
+        data: {
+          show: true,
+          login_type: true,
+          checkedNames: [],
+        },
+    });
+</script>
+</body>
+</html>
